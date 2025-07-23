@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Deepak Bhai!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffebee;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .pin-input {
+            padding: 10px;
+            font-size: 20px;
+            margin: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            display: none;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #d81b60;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .birthday-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            background-color: #ff4081;
+            border-radius: 50%;
+            animation: float 5s infinite ease-in;
+            opacity: 0.7;
+            z-index: 1;
+        }
+        
+        .balloon:before {
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background-color: #757575;
+            top: 50px;
+            left: 19px;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        
+        .message {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .signature {
+            font-style: italic;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        .cracker {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: linear-gradient(to right, #f44336, #ff9800);
+            border-radius: 5px;
+            z-index: 1;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f44336;
+            opacity: 0;
+            z-index: 2;
+        }
+        
+        .blast {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 3;
+        }
+        
+        .sound-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="lock-screen">
+        <h2>Enter PIN to Unlock</h2>
+        <input type="password" class="pin-input" maxlength="4" placeholder="Enter PIN">
+        <button onclick="checkPin()">Unlock</button>
+    </div>
+    
+    <div class="container">
+        <h1>🎉 Happy Birthday Deepak Bhai! 🎉</h1>
+        
+        <div class="birthday-card">
+            <p class="message">
+                Wishing you a fantastic birthday filled with joy, laughter, and happiness! 
+                May all your dreams and wishes come true. Enjoy your special day to the fullest!
+            </p>
+            <p class="signature">With warm wishes,<br>Your Well-wisher</p>
+        </div>
+    </div>
+    
+    <div class="sound-control" onclick="toggleSound()">🔊</div>
+    
+    <audio id="balloonSound" preload="auto">
+        <source src="https://www.soundjay.com/mechanical/sounds/balloon-pop-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="crackerSound" preload="auto">
+        <source src="https://www.soundjay.com/human/sounds/applause-8.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="https://www.soundjay.com/music/sounds/happy-birthday-song-01.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // PIN Lock Functionality
+        const CORRECT_PIN = "9091";
+        let soundEnabled = true;
+        
+        function checkPin() {
+            const enteredPin = document.querySelector('.pin-input').value;
+            if (enteredPin === CORRECT_PIN) {
+                document.querySelector('.lock-screen').style.display = 'none';
+                document.querySelector('.container').style.display = 'block';
+                startCelebration();
+            } else {
+                alert("Incorrect PIN! Try again.");
+                document.querySelector('.pin-input').value = "";
+            }
+        }
+        
+        // Celebration Functions
+        function startCelebration() {
+            playBackgroundMusic();
+            createBalloons(30);
+            createCrackers(5);
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const soundControl = document.querySelector('.sound-control');
+            soundControl.textContent = soundEnabled ? '🔊' : '🔇';
+            
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            if (soundEnabled) {
+                backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+            } else {
+                backgroundMusic.pause();
+            }
+        }
+        
+        function playBackgroundMusic() {
+            if (soundEnabled) {
+                const audio = document.getElementById('backgroundMusic');
+                audio.volume = 0.3;
+                audio.play().catch(e => console.log("Autoplay prevented:", e));
+            }
+        }
+        
+        function playBalloonSound() {
+            if (!soundEnabled) return;
+            const audio = document.getElementById('balloonSound');
+            audio.currentTime = 0;
+            audio.play();
+        }
+        
+        function playCrackerSound() {
+            if (!soundEnabled) return;
+            const audio = document.getElementById('crackerSound');
+            audio.currentTime = 0;
+            audio.play();
+        }
+        
+        function createBalloons(count) {
+            const colors = ['#ff4081', '#3f51b5', '#4caf50', '#ff9800', '#9c27b0'];
+            
+            for (let i = 0; i < count; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                
+                // Random properties
+                const size = Math.random() * 20 + 30;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * window.innerWidth;
+                const animationDuration = Math.random() * 5 + 5;
+                const delay = Math.random() * 5;
+                
+                balloon.style.width = `${size}px`;
+                balloon.style.height = `${size * 1.25}px`;
+                balloon.style.backgroundColor = color;
+                balloon.style.left = `${left}px`;
+                balloon.style.animationDuration = `${animationDuration}s`;
+                balloon.style.animationDelay = `${delay}s`;
+                
+                // Make balloons clickable to pop
+                balloon.onclick = function() {
+                    popBalloon(this);
+                };
+                
+                document.body.appendChild(balloon);
+                
+                // Remove balloon after animation completes
+                setTimeout(() => {
+                    if (balloon.parentNode) {
+                        popBalloon(balloon);
+                    }
+                }, (animationDuration + delay) * 1000);
+            }
+            
+            // Keep creating new balloons
+            setTimeout(() => createBalloons(count), 2000);
+        }
+        
+        function popBalloon(balloon) {
+            playBalloonSound();
+            createBlastEffect(balloon);
+            balloon.remove();
+        }
+        
+        function createCrackers(count) {
+            for (let i = 0; i < count; i++) {
+                const cracker = document.createElement('div');
+                cracker.className = 'cracker';
+                
+                // Random properties
+                const left = Math.random() * window.innerWidth;
+                const top = Math.random() * window.innerHeight;
+                const rotation = Math.random() * 360;
+                const delay = Math.random() * 5;
+                
+                cracker.style.left = `${left}px`;
+                cracker.style.top = `${top}px`;
+                cracker.style.transform = `rotate(${rotation}deg)`;
+                
+                document.body.appendChild(cracker);
+                
+                // Explode cracker after delay
+                setTimeout(() => {
+                    explodeCracker(cracker);
+                }, delay * 1000);
+            }
+            
+            // Keep creating new crackers
+            setTimeout(() => createCrackers(count), 5000);
+        }
+        
+        function explodeCracker(cracker) {
+            playCrackerSound();
+            
+            // Create blast effect
+            const blast = document.createElement('div');
+            blast.className = 'blast';
+            blast.style.left = `${cracker.offsetLeft - 50}px`;
+            blast.style.top = `${cracker.offsetTop - 50}px`;
+            document.body.appendChild(blast);
+            
+            // Animate blast
+            setTimeout(() => {
+                blast.style.transform = 'scale(2)';
+                blast.style.opacity = '0.8';
+                
+                // Create confetti
+                createConfetti(cracker.offsetLeft + 10, cracker.offsetTop + 20);
+                
+                setTimeout(() => {
+                    blast.remove();
+                }, 500);
+            }, 10);
+            
+            cracker.remove();
+        }
+        
+        function createConfetti(x, y) {
+            const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
+            
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random properties
+                const size = Math.random() * 10 + 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 5 + 5;
+                const rotation = Math.random() * 360;
+                const rotationSpeed = Math.random() * 10 - 5;
+                
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${x}px`;
+                confetti.style.top = `${y}px`;
+                confetti.style.opacity = '1';
+                confetti.style.transform = `rotate(${rotation}deg)`;
+                
+                document.body.appendChild(confetti);
+                
+                // Animate confetti
+                let posX = x;
+                let posY = y;
+                let currentRotation = rotation;
+                const gravity = 0.1;
+                let yVelocity = Math.sin(angle) * velocity;
+                let xVelocity = Math.cos(angle) * velocity;
+                
+                const animateConfetti = setInterval(() => {
+                    yVelocity += gravity;
+                    posX += xVelocity;
+                    posY += yVelocity;
+                    currentRotation += rotationSpeed;
+                    
+                    confetti.style.left = `${posX}px`;
+                    confetti.style.top = `${posY}px`;
+                    confetti.style.transform = `rotate(${currentRotation}deg)`;
+                    confetti.style.opacity = parseFloat(confetti.style.opacity) - 0.01;
+                    
+                    if (posY > window.innerHeight || parseFloat(confetti.style.opacity) <= 0) {
+                        clearInterval(animateConfetti);
+                        confetti.remove();
+                    }
+                }, 20);
+            }
+        }
+        
+        function createBlastEffect(balloon) {
+            const blast = document.createElement('div');
+            blast.className = 'blast';
+            blast.style.left = `${balloon.offsetLeft - 50}px`;
+            blast.style.top = `${balloon.offsetTop - 50}px`;
+            document.body.appendChild(blast);
+            
+            // Animate blast
+            setTimeout(() => {
+                blast.style.transform = 'scale(1.5)';
+                blast.style.opacity = '0.8';
+                
+                setTimeout(() => {
+                    blast.remove();
+                }, 500);
+            }, 10);
+        }
+        
+        // Allow pressing Enter to submit PIN
+        document.querySelector('.pin-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPin();
+            }
+        });
+    </script>
+</body>
+</html>
